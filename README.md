@@ -1,2 +1,2 @@
 # Mitarbeiterverwaltung_BOS
-Projekt [Marcel, Matej, Andrej, Samy]
+Projekt [Marcel, Matej, André, Samy]
