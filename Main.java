@@ -20,7 +20,7 @@ public class Main {
         Object choice = JOptionPane.showInputDialog( // testing the choice between login and register -MF
                 null,
                 "What do you want to do?",
-                "TEST HOME SCREEN",
+                "HOME SCREEN",
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
                 loginRegisterChoice,
