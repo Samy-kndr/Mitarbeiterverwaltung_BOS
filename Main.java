@@ -174,7 +174,7 @@ public class Main {
                     "clocked in successfully",
                     JOptionPane.INFORMATION_MESSAGE);
 
-        }else{ // clocking out -MF
+        }else if (selectedOption == "Clock Out"){ // clocking out -MF
 
             user.setClockOutTime(System.currentTimeMillis());
 
@@ -200,6 +200,8 @@ public class Main {
 
             saveUserToJson(user);
 
+        }else{
+            System.out.println("cancelled...");
         }
         System.exit(0);
 
