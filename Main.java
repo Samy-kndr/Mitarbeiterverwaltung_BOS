@@ -85,13 +85,40 @@ public class Main {
                     System.out.println(userconf);
 
                     if (Objects.equals(userName, userconf)) {
+
+                        Object[] workModelOptions = {"full time", "part time", "minijob"};
+
+                        Object workModelChoice = JOptionPane.showInputDialog( // selecting workModel for calculating overhours -MF
+                                null,
+                                "Please select your work model. \n" +
+                                        "\"full time\" = 8 hours / day \n" +
+                                        "\"part time\" = 4 hours / day \n" +
+                                        "\"minijob\" = 2 hours / day",
+                                "Select a work model",
+                                JOptionPane.INFORMATION_MESSAGE,
+                                null,
+                                workModelOptions,
+                                workModelOptions[0]
+                        );
+
+                        if (workModelChoice == "full time"){
+                            user.setWorkingHours(8);
+                        }else if(workModelChoice == "part time"){
+                            user.setWorkingHours(4);
+                        }else if(workModelChoice == "minijob"){
+                            user.setWorkingHours(2);
+                        }else{
+                            System.out.println("cancelled...");
+                            System.exit(0);
+                        }
+
                         saveUserToJson(user);
                         conf1 = 1;
                     } else {
                         JOptionPane.showMessageDialog(
                                 null,
                                 "Names don´t match \n" +
-                                        "Plese try again",
+                                        "Please try again",
                                 "Confirmation Fail",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
@@ -187,6 +214,10 @@ public class Main {
             long workTimeDifference = outTime - inTime;
 
             System.out.println("user working hours: " + workTimeDifference);
+
+            long userOverHours = user.getOverHours() + workTimeDifference - user.getWorkingHours();
+            System.out.println("user over hours: " + userOverHours);
+            user.setOverHours(userOverHours);
 
             JOptionPane.showInternalMessageDialog(
                     null,
