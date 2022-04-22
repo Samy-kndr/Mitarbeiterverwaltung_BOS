@@ -4,9 +4,12 @@ Projekt [Marcel, Matej, André, Samy]
 Planung:
 -----------------------------
 
+
+Designs / Abbildungen ---> 1) Matej, 2) André
+
 einloggen/registrieren/abbrechen
 
-[einloggen:]
+[einloggen:]   ---> 1) André, 2) Matej
 
 - überprüfung, ob name vergeben (verfügbarkeitsüberprüfung auslagern)
 - optionen:
@@ -16,7 +19,7 @@ einloggen/registrieren/abbrechen
         - abrufen
         - ausloggen
 
-[registrieren:]
+[registrieren:]   ---> 1) Samy, 2) Marcel
 
 - name eingeben (überprüfung verfügbarkeit) -> loop
 - "ist dieser korrekt?" (ja/nein) -> loop
@@ -33,7 +36,7 @@ einloggen/registrieren/abbrechen
 [Klassen]
 - Main
 
-- User
+- User   ---> 1) Marcel , 2) Samy
         -> name
         -> workingHours (fulltime, parttime, minijob)
         -> clockInTime

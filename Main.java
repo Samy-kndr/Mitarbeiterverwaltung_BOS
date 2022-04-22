@@ -12,6 +12,8 @@ import com.google.gson.GsonBuilder;
 public class Main {
     public static void main(String[] args) {
 
+        new BackgroundImage(); // Background Image for visual purposes -MF/MW
+
         int conf1 = 0;
         User user = new User();
 
@@ -48,7 +50,7 @@ public class Main {
                         "Sorry, that profile does not exist yet. \n" +
                                 "Please try registering",
                         "profile does not exist",
-                        JOptionPane.INFORMATION_MESSAGE
+                        JOptionPane.ERROR_MESSAGE
                 );
 
                 System.exit(0);
@@ -85,15 +87,43 @@ public class Main {
                     System.out.println(userconf);
 
                     if (Objects.equals(userName, userconf)) {
+
+                        Object[] workModelOptions = {"full time", "part time", "minijob"};
+
+                        Object workModelChoice = JOptionPane.showInputDialog( // selecting workModel for calculating overhours -MF
+                                null,
+                                """
+                                        Please select your work model.\s
+                                        "full time" = 8 hours / day\s
+                                        "part time" = 4 hours / day\s
+                                        "minijob" = 2 hours / day""",
+                                "Select a work model",
+                                JOptionPane.INFORMATION_MESSAGE,
+                                null,
+                                workModelOptions,
+                                workModelOptions[0]
+                        );
+
+                        if (workModelChoice == "full time"){
+                            user.setWorkingHours(8);
+                        }else if(workModelChoice == "part time"){
+                            user.setWorkingHours(4);
+                        }else if(workModelChoice == "minijob"){
+                            user.setWorkingHours(2);
+                        }else{
+                            System.out.println("cancelled...");
+                            System.exit(0);
+                        }
+
                         saveUserToJson(user);
                         conf1 = 1;
                     } else {
                         JOptionPane.showMessageDialog(
                                 null,
                                 "Names don´t match \n" +
-                                        "Plese try again",
+                                        "Please try again",
                                 "Confirmation Fail",
-                                JOptionPane.INFORMATION_MESSAGE
+                                JOptionPane.ERROR_MESSAGE
                         );
                     }
 
@@ -157,48 +187,82 @@ public class Main {
 
         if(selectedOption == "Clock In"){ //clocking in -MF
 
-            user.setClockInTime(System.currentTimeMillis());
+            if(!user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF
 
-            System.out.println("user ClockInTime: " + user.getClockInTime());
+                user.setClockInTime(System.currentTimeMillis());
 
-            long hours = user.getClockInTime() / 3600000;
+                System.out.println("user ClockInTime: " + user.getClockInTime());
 
-            System.out.println("time in hours: " + hours);
+                long hours = user.getClockInTime() / 3600000;
 
-            saveUserToJson(user);
+                System.out.println("time in hours: " + hours);
 
-            JOptionPane.showInternalMessageDialog(
-                    null,
-                    "Thank you. You have successfully clocked in. \n" +
-                            "Please don't forget to clock out before leaving work!",
-                    "clocked in successfully",
-                    JOptionPane.INFORMATION_MESSAGE);
+                user.setAlreadyClockedIn(true);
+
+                saveUserToJson(user);
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked in. \n" +
+                                "Please don't forget to clock out before leaving work!",
+                        "clocked in successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are already clocked in. \n" +
+                                "Try clocking out after work.",
+                        "already clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
 
         }else if (selectedOption == "Clock Out"){ // clocking out -MF
 
-            user.setClockOutTime(System.currentTimeMillis());
+            if(user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF
 
-            long inTime = user.getClockInTime() / 3600000;
-            long outTime = user.getClockOutTime() / 3600000;
+                user.setClockOutTime(System.currentTimeMillis());
 
-            System.out.println("user ClockInTime: " + inTime +
-                    "\n user ClockOutTime: " + outTime);
+                long inTime = user.getClockInTime() / 3600000;
+                long outTime = user.getClockOutTime() / 3600000;
 
-            long workTimeDifference = outTime - inTime;
+                System.out.println("user ClockInTime: " + inTime +
+                        "\n user ClockOutTime: " + outTime);
 
-            System.out.println("user working hours: " + workTimeDifference);
+                long workTimeDifference = outTime - inTime;
 
-            JOptionPane.showInternalMessageDialog(
-                    null,
-                    "Thank you. You have successfully clocked out. \n" +
-                            "You have worked " + workTimeDifference + " hours today!",
-                    "clocked out successfully", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("user working hours: " + workTimeDifference);
 
-            user.setClockInTime(0);
-            user.setClockOutTime(0);
-            user.setWorkedHoursTotal(user.getWorkedHoursTotal() + workTimeDifference);
+                long userOverHours = user.getOverHours() + workTimeDifference - user.getWorkingHours();
+                System.out.println("user over hours: " + userOverHours);
+                user.setOverHours(userOverHours);
 
-            saveUserToJson(user);
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked out. \n" +
+                                "You have worked " + workTimeDifference + " hours today!",
+                        "clocked out successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                user.setClockInTime(0);
+                user.setClockOutTime(0);
+                user.setWorkedHoursTotal(user.getWorkedHoursTotal() + workTimeDifference);
+                user.setAlreadyClockedIn(false);
+
+                saveUserToJson(user);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are not clocked in yet. \n" +
+                                "Please contact your system administrator or try clocking in.",
+                        "not clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
 
         }else{
             System.out.println("cancelled...");
@@ -239,7 +303,7 @@ public class Main {
     // -MF
     public static User loadUserFromJson(String userNameToLoad){
         StringBuilder jsonToLoad = new StringBuilder();
-        User userToLoad = new User();
+        User userToLoad;
         Gson gson = new Gson();
 
         try{
@@ -269,7 +333,7 @@ public class Main {
     // -> true: profile does not exist and is available; false: profile already exists and is therefore not available
     public static boolean checkUserAvailability(String nameToCheck){
 
-        User checkUser = new User();
+        User checkUser;
 
         checkUser = loadUserFromJson(nameToCheck);
 
