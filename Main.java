@@ -12,6 +12,8 @@ import com.google.gson.GsonBuilder;
 public class Main {
     public static void main(String[] args) {
 
+        new BackgroundImage(); // Background Image for visual purposes -MF/MW
+
         int conf1 = 0;
         User user = new User();
 
