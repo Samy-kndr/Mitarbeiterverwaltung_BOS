@@ -247,6 +247,7 @@ public class Main {
                 user.setClockInTime(0);
                 user.setClockOutTime(0);
                 user.setWorkedHoursTotal(user.getWorkedHoursTotal() + workTimeDifference);
+                user.setAlreadyClockedIn(false);
 
                 saveUserToJson(user);
 
