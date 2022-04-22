@@ -48,7 +48,7 @@ public class Main {
                         "Sorry, that profile does not exist yet. \n" +
                                 "Please try registering",
                         "profile does not exist",
-                        JOptionPane.INFORMATION_MESSAGE
+                        JOptionPane.ERROR_MESSAGE
                 );
 
                 System.exit(0);
@@ -90,10 +90,11 @@ public class Main {
 
                         Object workModelChoice = JOptionPane.showInputDialog( // selecting workModel for calculating overhours -MF
                                 null,
-                                "Please select your work model. \n" +
-                                        "\"full time\" = 8 hours / day \n" +
-                                        "\"part time\" = 4 hours / day \n" +
-                                        "\"minijob\" = 2 hours / day",
+                                """
+                                        Please select your work model.\s
+                                        "full time" = 8 hours / day\s
+                                        "part time" = 4 hours / day\s
+                                        "minijob" = 2 hours / day""",
                                 "Select a work model",
                                 JOptionPane.INFORMATION_MESSAGE,
                                 null,
@@ -120,7 +121,7 @@ public class Main {
                                 "Names don´t match \n" +
                                         "Please try again",
                                 "Confirmation Fail",
-                                JOptionPane.INFORMATION_MESSAGE
+                                JOptionPane.ERROR_MESSAGE
                         );
                     }
 
@@ -184,52 +185,81 @@ public class Main {
 
         if(selectedOption == "Clock In"){ //clocking in -MF
 
-            user.setClockInTime(System.currentTimeMillis());
+            if(!user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF
 
-            System.out.println("user ClockInTime: " + user.getClockInTime());
+                user.setClockInTime(System.currentTimeMillis());
 
-            long hours = user.getClockInTime() / 3600000;
+                System.out.println("user ClockInTime: " + user.getClockInTime());
 
-            System.out.println("time in hours: " + hours);
+                long hours = user.getClockInTime() / 3600000;
 
-            saveUserToJson(user);
+                System.out.println("time in hours: " + hours);
 
-            JOptionPane.showInternalMessageDialog(
-                    null,
-                    "Thank you. You have successfully clocked in. \n" +
-                            "Please don't forget to clock out before leaving work!",
-                    "clocked in successfully",
-                    JOptionPane.INFORMATION_MESSAGE);
+                user.setAlreadyClockedIn(true);
+
+                saveUserToJson(user);
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked in. \n" +
+                                "Please don't forget to clock out before leaving work!",
+                        "clocked in successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are already clocked in. \n" +
+                                "Try clocking out after work.",
+                        "already clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
 
         }else if (selectedOption == "Clock Out"){ // clocking out -MF
 
-            user.setClockOutTime(System.currentTimeMillis());
+            if(user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF
 
-            long inTime = user.getClockInTime() / 3600000;
-            long outTime = user.getClockOutTime() / 3600000;
+                user.setClockOutTime(System.currentTimeMillis());
 
-            System.out.println("user ClockInTime: " + inTime +
-                    "\n user ClockOutTime: " + outTime);
+                long inTime = user.getClockInTime() / 3600000;
+                long outTime = user.getClockOutTime() / 3600000;
 
-            long workTimeDifference = outTime - inTime;
+                System.out.println("user ClockInTime: " + inTime +
+                        "\n user ClockOutTime: " + outTime);
 
-            System.out.println("user working hours: " + workTimeDifference);
+                long workTimeDifference = outTime - inTime;
 
-            long userOverHours = user.getOverHours() + workTimeDifference - user.getWorkingHours();
-            System.out.println("user over hours: " + userOverHours);
-            user.setOverHours(userOverHours);
+                System.out.println("user working hours: " + workTimeDifference);
 
-            JOptionPane.showInternalMessageDialog(
-                    null,
-                    "Thank you. You have successfully clocked out. \n" +
-                            "You have worked " + workTimeDifference + " hours today!",
-                    "clocked out successfully", JOptionPane.INFORMATION_MESSAGE);
+                long userOverHours = user.getOverHours() + workTimeDifference - user.getWorkingHours();
+                System.out.println("user over hours: " + userOverHours);
+                user.setOverHours(userOverHours);
 
-            user.setClockInTime(0);
-            user.setClockOutTime(0);
-            user.setWorkedHoursTotal(user.getWorkedHoursTotal() + workTimeDifference);
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked out. \n" +
+                                "You have worked " + workTimeDifference + " hours today!",
+                        "clocked out successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
 
-            saveUserToJson(user);
+                user.setClockInTime(0);
+                user.setClockOutTime(0);
+                user.setWorkedHoursTotal(user.getWorkedHoursTotal() + workTimeDifference);
+
+                saveUserToJson(user);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are not clocked in yet. \n" +
+                                "Please contact your system administrator or try clocking in.",
+                        "not clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
 
         }else{
             System.out.println("cancelled...");
@@ -270,7 +300,7 @@ public class Main {
     // -MF
     public static User loadUserFromJson(String userNameToLoad){
         StringBuilder jsonToLoad = new StringBuilder();
-        User userToLoad = new User();
+        User userToLoad;
         Gson gson = new Gson();
 
         try{
@@ -300,7 +330,7 @@ public class Main {
     // -> true: profile does not exist and is available; false: profile already exists and is therefore not available
     public static boolean checkUserAvailability(String nameToCheck){
 
-        User checkUser = new User();
+        User checkUser;
 
         checkUser = loadUserFromJson(nameToCheck);
 

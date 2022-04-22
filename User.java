@@ -6,6 +6,7 @@ public class User {
     private long overHours;
     private long clockInTime;
     private long clockOutTime;
+    private boolean isAlreadyClockedIn = false;
 
     User(){}
 
@@ -68,4 +69,11 @@ public class User {
         this.workedHoursTotal = workedHoursTotal;
     }
 
+    public void setAlreadyClockedIn(boolean alreadyClockedIn) {
+        isAlreadyClockedIn = alreadyClockedIn;
+    }
+
+    public boolean isAlreadyClockedIn() {
+        return isAlreadyClockedIn;
+    }
 }
