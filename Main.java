@@ -15,6 +15,7 @@ public class Main {
         new BackgroundImage(); // Background Image for visual purposes -MF/MW
 
         int conf1 = 0;
+        int jmp = 0;
         User user = new User();
 
         Object[] loginRegisterChoice = {"Log In", "Register"};
@@ -174,7 +175,7 @@ public class Main {
         // -> "Clock In" --> saved current time in the user json
         // -> "Clock Out" --> calculates difference between current time and clock-in time and shows calculated "worktime"
         // -MF
-        Object[] userOptions = { "Clock In", "Clock Out"};
+        Object[] userOptions = { "Clock In", "Clock Out", "Check overtime"};
 
         Object selectedOption =
                 JOptionPane.showInputDialog(
@@ -263,7 +264,215 @@ public class Main {
                         JOptionPane.ERROR_MESSAGE);
 
             }
+            // display of overtime -AW
+        }else if (selectedOption == "Check overtime"){
+            JOptionPane.showInternalMessageDialog(
+                    null,
+                    "You have " + user.getOverHours() + " hours in overtime!",
+                         "Overtime",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            System.out.println("cancelled...");
+            System.exit(0);
+        }
 
+        Object[] userOptions2 = { "Clock In", "Clock Out", "Check overtime"};
+
+        Object selectedOption2 =
+                JOptionPane.showInputDialog(
+                        null,
+                        "What do you want to do?",
+                        "Options",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null, userOptions2, userOptions2[0]
+                );
+
+        if(selectedOption2 == "Clock In"){ //clocking in -MF   // Kopiert von oben -AW
+
+            if(!user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF // Kopiert von oben -AW
+
+                user.setClockInTime(System.currentTimeMillis());
+
+                System.out.println("user ClockInTime: " + user.getClockInTime());
+
+                long hours = user.getClockInTime() / 3600000;
+
+                System.out.println("time in hours: " + hours);
+
+                user.setAlreadyClockedIn(true);
+
+                saveUserToJson(user);
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked in. \n" +
+                                "Please don't forget to clock out before leaving work!",
+                        "clocked in successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are already clocked in. \n" +
+                                "Try clocking out after work.",
+                        "already clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        }else if (selectedOption2 == "Clock Out"){ // clocking out -MF   // Kopiert von oben -AW
+
+            if(user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF   // Kopiert von oben -AW
+
+                user.setClockOutTime(System.currentTimeMillis());
+
+                long inTime = user.getClockInTime() / 3600000;
+                long outTime = user.getClockOutTime() / 3600000;
+
+                System.out.println("user ClockInTime: " + inTime +
+                        "\n user ClockOutTime: " + outTime);
+
+                long workTimeDifference = outTime - inTime;
+
+                System.out.println("user working hours: " + workTimeDifference);
+
+                long userOverHours = user.getOverHours() + workTimeDifference - user.getWorkingHours();
+                System.out.println("user over hours: " + userOverHours);
+                user.setOverHours(userOverHours);
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked out. \n" +
+                                "You have worked " + workTimeDifference + " hours today!",
+                        "clocked out successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                user.setClockInTime(0);
+                user.setClockOutTime(0);
+                user.setWorkedHoursTotal(user.getWorkedHoursTotal() + workTimeDifference);
+                user.setAlreadyClockedIn(false);
+
+                saveUserToJson(user);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are not clocked in yet. \n" +
+                                "Please contact your system administrator or try clocking in.",
+                        "not clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
+            // display of overtime -AW
+        }else if (selectedOption2 == "Check overtime"){
+            JOptionPane.showInternalMessageDialog(
+                    null,
+                    "You have " + user.getOverHours() + " hours in overtime!",
+                    "Overtime",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            System.out.println("cancelled...");
+            System.exit(0);
+        }
+
+        Object[] userOptions3 = { "Clock In", "Clock Out", "Check overtime"};
+
+        Object selectedOption3 =
+                JOptionPane.showInputDialog(
+                        null,
+                        "What do you want to do?",
+                        "Options",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        null, userOptions3, userOptions3[0]
+                );
+
+        if(selectedOption3 == "Clock In"){ //clocking in -MF   // Kopiert von oben -AW
+
+            if(!user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF  // Kopiert von oben -AW
+
+                user.setClockInTime(System.currentTimeMillis());
+
+                System.out.println("user ClockInTime: " + user.getClockInTime());
+
+                long hours = user.getClockInTime() / 3600000;
+
+                System.out.println("time in hours: " + hours);
+
+                user.setAlreadyClockedIn(true);
+
+                saveUserToJson(user);
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked in. \n" +
+                                "Please don't forget to clock out before leaving work!",
+                        "clocked in successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are already clocked in. \n" +
+                                "Try clocking out after work.",
+                        "already clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        }else if (selectedOption3 == "Clock Out"){ // clocking out -MF   // Kopiert von oben -AW
+
+            if(user.isAlreadyClockedIn()){ // checks if user is already clocked in or not -MF  // Kopiert von oben -AW
+
+                user.setClockOutTime(System.currentTimeMillis());
+
+                long inTime = user.getClockInTime() / 3600000;
+                long outTime = user.getClockOutTime() / 3600000;
+
+                System.out.println("user ClockInTime: " + inTime +
+                        "\n user ClockOutTime: " + outTime);
+
+                long workTimeDifference = outTime - inTime;
+
+                System.out.println("user working hours: " + workTimeDifference);
+
+                long userOverHours = user.getOverHours() + workTimeDifference - user.getWorkingHours();
+                System.out.println("user over hours: " + userOverHours);
+                user.setOverHours(userOverHours);
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Thank you. You have successfully clocked out. \n" +
+                                "You have worked " + workTimeDifference + " hours today!",
+                        "clocked out successfully",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                user.setClockInTime(0);
+                user.setClockOutTime(0);
+                user.setWorkedHoursTotal(user.getWorkedHoursTotal() + workTimeDifference);
+                user.setAlreadyClockedIn(false);
+
+                saveUserToJson(user);
+
+            }else{
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Sorry, it seems you are not clocked in yet. \n" +
+                                "Please contact your system administrator or try clocking in.",
+                        "not clocked in",
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
+            // display of overtime -AW
+        }else if (selectedOption3 == "Check overtime"){
+            JOptionPane.showInternalMessageDialog(
+                    null,
+                    "You have " + user.getOverHours() + " hours in overtime!",
+                    "Overtime",
+                    JOptionPane.INFORMATION_MESSAGE);
         }else{
             System.out.println("cancelled...");
         }
