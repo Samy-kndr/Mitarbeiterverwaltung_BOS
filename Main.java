@@ -15,7 +15,7 @@ public class Main {
         new BackgroundImage(); // Background Image for visual purposes -MF/MW
 
         int conf1 = 0;
-        int logout = 0; //-AW log
+        //-AW log
         User user = new User();
 
         Object[] loginRegisterChoice = {"Log In", "Register"};
