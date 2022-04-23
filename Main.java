@@ -176,7 +176,7 @@ public class Main {
             // -> "Clock In" --> saved current time in the user json
             // -> "Clock Out" --> calculates difference between current time and clock-in time and shows calculated "worktime"
             // -MF
-            Object[] userOptions = {"Clock In", "Clock Out", "Check worked time","Check overtime", "logout"};
+            Object[] userOptions = {"Clock In", "Clock Out", "Check worked time","Check overtime", "Log Out"};
 
             Object selectedOption =
                     JOptionPane.showInputDialog(
@@ -268,7 +268,7 @@ public class Main {
             } else if (selectedOption == "Check worked time") {
                 JOptionPane.showInternalMessageDialog(
                         null,
-                        "You have " + user.getWorkedHoursTotal() + " hours worked today!",
+                        "You have worked " + user.getWorkedHoursTotal() + " hours in total!",
                         "Worked hours",
                         JOptionPane.INFORMATION_MESSAGE);
                 // display of overtime -AW
@@ -280,7 +280,8 @@ public class Main {
                         JOptionPane.INFORMATION_MESSAGE);
 
             // logout -AW log
-            }else if (selectedOption == "logout") {
+            }else if (selectedOption == "Log Out") {
+                saveUserToJson(user);
                 logout = 1; //-AW log
                 System.exit(0);
 
