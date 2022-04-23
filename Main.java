@@ -170,7 +170,7 @@ public class Main {
             );
 
         }
-        while(logout == 0) {      //userOptions loop -AW log
+        while(true) {      //userOptions loop -AW log
 
             // asking user to either clock in or clock out
             // -> "Clock In" --> saved current time in the user json
@@ -179,8 +179,8 @@ public class Main {
             Object[] userOptions;
 
             // adjusting Options -SK
-            if(user.isAlreadyClockedIn() == false){
-                userOptions = new Object[]{"Clock In", "Clock Out", "Check worked time", "Check overtime", "logout"};
+            if(!user.isAlreadyClockedIn()){
+                userOptions = new Object[]{"Clock In", "Check worked time", "Check overtime", "logout"};
             } else {
                 userOptions = new Object[]{"Clock Out", "Check worked time", "Check overtime", "logout"};
             }
@@ -289,7 +289,6 @@ public class Main {
             // logout -AW log
             }else if (selectedOption == "Log Out") {
                 saveUserToJson(user);
-                logout = 1; //-AW log
                 System.exit(0);
 
 
