@@ -176,7 +176,14 @@ public class Main {
             // -> "Clock In" --> saved current time in the user json
             // -> "Clock Out" --> calculates difference between current time and clock-in time and shows calculated "worktime"
             // -MF
-            Object[] userOptions = {"Clock In", "Clock Out", "Check worked time","Check overtime", "Log Out"};
+            Object[] userOptions;
+
+            // adjusting Options -SK
+            if(user.isAlreadyClockedIn() == false){
+                userOptions = new Object[]{"Clock In", "Clock Out", "Check worked time", "Check overtime", "logout"};
+            } else {
+                userOptions = new Object[]{"Clock Out", "Check worked time", "Check overtime", "logout"};
+            }
 
             Object selectedOption =
                     JOptionPane.showInputDialog(
