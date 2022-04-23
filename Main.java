@@ -180,9 +180,9 @@ public class Main {
 
             // adjusting Options -SK
             if(!user.isAlreadyClockedIn()){
-                userOptions = new Object[]{"Clock In", "Check worked time", "Check overtime", "logout"};
+                userOptions = new Object[]{"Clock In", "Check worked time", "Check overtime", "Log Out"};
             } else {
-                userOptions = new Object[]{"Clock Out", "Check worked time", "Check overtime", "logout"};
+                userOptions = new Object[]{"Clock Out", "Check worked time", "Check overtime", "Log Out"};
             }
 
             Object selectedOption =
@@ -289,6 +289,13 @@ public class Main {
             // logout -AW log
             }else if (selectedOption == "Log Out") {
                 saveUserToJson(user);
+
+                JOptionPane.showInternalMessageDialog(
+                        null,
+                        "Goodbye. Have a great day!",
+                        "LOGOUT",
+                        JOptionPane.INFORMATION_MESSAGE);
+
                 System.exit(0);
 
 
