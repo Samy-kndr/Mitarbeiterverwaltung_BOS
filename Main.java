@@ -45,7 +45,7 @@ public class Main {
             user.setName(userName);
 
             if(checkUserAvailability(userName)){
-                // true == profile does not exist
+                // true --> profile does not exist -MF
                 JOptionPane.showMessageDialog(
                         null,
                         "Sorry, that profile does not exist yet. \n" +
@@ -173,7 +173,7 @@ public class Main {
         while(true) {      //userOptions loop -AW log
 
             // asking user to either clock in or clock out
-            // -> "Clock In" --> saved current time in the user json
+            // -> "Clock In" --> saves current time in the user json
             // -> "Clock Out" --> calculates difference between current time and clock-in time and shows calculated "worktime"
             // -MF
             Object[] userOptions;
@@ -242,7 +242,7 @@ public class Main {
 
                     long workTimeDifference = outTime - inTime;
 
-                    System.out.println("user working hours: " + workTimeDifference);
+                    System.out.println("user worked hours: " + workTimeDifference);
 
                     long userOverHours = user.getOverHours() + workTimeDifference - user.getWorkingHours();
                     System.out.println("user over hours: " + userOverHours);
